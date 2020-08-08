@@ -1,4 +1,5 @@
-﻿using FactoryDesignPattern.Models;
+﻿using FactoryDesignPattern.Factory;
+using FactoryDesignPattern.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FactoryDesignPattern.Controllers
@@ -26,6 +27,11 @@ namespace FactoryDesignPattern.Controllers
         [HttpPost]
         public IActionResult Create(Employee employee)
         {
+            var factory = new EmployeeManagerFactory();
+            var employeeManager = factory.GetEmployeeManager(employee.EmployeeType);
+            employee.Bonus = employeeManager.GetBonus();
+            employee.HourlyPay = employeeManager.GetPay();
+
             var savedEmployee = _employee.AddEmployee(employee);
 
             return RedirectToAction("Index");
@@ -44,6 +50,11 @@ namespace FactoryDesignPattern.Controllers
         [HttpPost]
         public IActionResult Edit(int id, Employee employee)
         {
+            var factory = new EmployeeManagerFactory();
+            var employeeManager = factory.GetEmployeeManager(employee.EmployeeType);
+            employee.Bonus = employeeManager.GetBonus();
+            employee.HourlyPay = employeeManager.GetPay();
+
             var updateEmployee = _employee.UpdateEmployee(employee);
 
             return RedirectToAction("Index");
